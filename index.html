@@ -10,31 +10,26 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Chatbase widget -->
-    <script>
-      (function(){
-        if(!window.chatbase||window.chatbase("getState")!=="initialized"){
-          window.chatbase=(...arguments)=>{
-            if(!window.chatbase.q){window.chatbase.q=[]}
-            window.chatbase.q.push(arguments)
-          };
-          window.chatbase=new Proxy(window.chatbase,{
-            get(target,prop){
-              if(prop==="q"){return target.q}
-              return(...args)=>target(prop,...args)
-            }
-          })
-        }
-        const onLoad=function(){
-          const script=document.createElement("script");
-          script.src="https://www.chatbase.co/embed.min.js";
-          script.id="SRTQxhFa90DsSQTSQNQIo"; // your unique chatbot ID
-          script.domain="www.chatbase.co";
-          document.body.appendChild(script)
-        };
-        if(document.readyState==="complete"){onLoad()}
-        else{window.addEventListener("load",onLoad)}
-      })();
-    </script>
+  <script>
+  (function(d,t) {
+    var BASE_URL="http://0.0.0.0:3000";
+    var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=BASE_URL+"/packs/js/sdk.js";
+    g.async = true;
+    s.parentNode.insertBefore(g,s);
+    g.onload=function(){
+      window.chatwootSDK.run({
+        websiteToken: '94FhKvtyM3Sv1shdyHStJuGf',
+        baseUrl: BASE_URL
+      })
+    }
+  })(document,"script");
+</script>
+
+
+
+
+
+
   </body>
 </html>
