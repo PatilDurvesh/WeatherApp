@@ -5,30 +5,60 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WeatherApp</title>
+
+  <style>
+  .powered-by { display: none !important; }
+</style>
+
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
- <script>
-  (function(d,t) {
-    var BASE_URL="http://0.0.0.0:3000";
-    var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-    g.src=BASE_URL+"/packs/js/sdk.js";
-    g.async = true;
-    s.parentNode.insertBefore(g,s);
-    g.onload=function(){
-      window.chatwootSDK.run({
-        websiteToken: '94FhKvtyM3Sv1shdyHStJuGf',
-        baseUrl: BASE_URL
-      })
-    }
-  })(document,"script");
+<script>
+(function(d,t) {
+  var BASE_URL = "http://127.0.0.1:3000"; // your Chatwoot URL
+  var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+  g.src = BASE_URL + "/packs/js/sdk.js";
+  g.defer = true; g.async = true;
+  s.parentNode.insertBefore(g, s);
+  g.onload = function() {
+    window.chatwootSDK.run({
+      websiteToken: '94FhKvtyM3Sv1shdyHStJuGf',
+      baseUrl: BASE_URL,
+      hideMessageBubble: false,
+      position: "right",
+      launcherTitle: "Need help?",
+      disableBranding: true // ✅ add this line
+    });
+
+    // ✅ safety fallback: forcibly remove footer
+  };
+})(document,"script");
 </script>
 
-
-
-
+<script>
+window.addEventListener("load", function () {
+  const removeBranding = setInterval(() => {
+    const iframe = document.querySelector('iframe[title="Chatwoot Widget"]');
+    if (iframe && iframe.contentWindow) {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!doc) return;
+        // Completely hide the "Powered by Chatwoot" link
+        const style = doc.createElement("style");
+        style.textContent = `
+          .powered-by { display: none !important; }
+          footer.powered-by { display: none !important; }
+          a[href*="chatwoot.com"] { display: none !important; pointer-events:none !important; }
+        `;
+        doc.head.appendChild(style);
+        clearInterval(removeBranding);
+      } catch (e) { /* keep retrying until iframe ready */ }
+    }
+  }, 800);
+});
+</script>
 
 
   </body>
